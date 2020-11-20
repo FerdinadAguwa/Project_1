@@ -35,6 +35,7 @@ Blues
 var artistName = "";
 var songName = "";
 var genre ="";
+var songButton = $("button.songs")
 var apiKey = "6f9af90b658b61feec3b4d25a8309963"
 var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
 var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
@@ -55,6 +56,7 @@ function getSongs(response) {
         
         //Setting the Artist and Song name in a list
         var songButton = $("<button>").text(artistName + " -- " + songName);
+        songButton.setAttribute("class", "songs");
 
         //This section posts the items in an unordered list
         songsListDiv.append(songButton);
@@ -75,6 +77,8 @@ function storeGenre() {
     localStorage.setItem("genre-selection", JSON.stringify(genre));
 };
 
+
+
 if (localStorage.getItem("genre-selection")){
     //Settings the genre variable based on the selection made
     genre = JSON.parse(localStorage.getItem("genre-selection"));
@@ -86,4 +90,5 @@ if (localStorage.getItem("genre-selection")){
     }).then(getSongs);
 }
 
-// 
+// event listener to trigger the lyrics posting
+songButton.addEventListener("click", getSongs);
