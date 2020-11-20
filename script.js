@@ -1,8 +1,11 @@
 /* Notes section for how I want to pull things.
 on the button press for each genre card, take the ID of the card to pass into the iTunesApiCall. 
 ON the response each songs' following info and stick it into an array:
-1. Artist: response.results.songs.data.attributes.artistName
-2. SongTitle: response.results.songs.data.attributes.name
+1. Artist: response.tracks.track[].artist.name
+2. SongTitle: response.tracks.track[].name
+
+
+
 
 iterrate the array into the list where it shows up as Artits - Song Name
 
@@ -23,7 +26,11 @@ Pop
 // Variables
 var artistName = "";
 var songName = "";
+var genre ="";
+var apiKey = "6f9af90b658b61feec3b4d25a8309963"
 var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
-var iTunesApiCall = "https://api.music.apple.com/v1/catalog/{storefront}/charts?types=songs&genre=" + /* genreID */ + "&limit=10";
+var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
+
+
 
 // 
