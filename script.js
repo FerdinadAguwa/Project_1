@@ -79,7 +79,7 @@ function getLyrics(response) {
 function lyricsAPI() {
     // getting the artistName and songName assigned for the call
     artistName = $(".artist-name").text();
-    songName = $("song-name").text();
+    songName = $(".song-name").text();
 
     //Setting the Song title in the Lyrics area
     var lyricsDiv = $(".col s7");
