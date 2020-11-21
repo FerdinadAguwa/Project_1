@@ -32,8 +32,9 @@ Blues
 var artistName = "";
 var songName = "";
 var genre ="";
-var genreEl = $(".card-image");
+var genreEl = $(".card-title");
 var songButton = $(".collection-item avatar");
+var playButton = $(".material-icons circle red");
 var apiKey = "6f9af90b658b61feec3b4d25a8309963";
 var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
 var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
@@ -114,5 +115,5 @@ if (localStorage.getItem("genre-selection")){
 };
 
 // event listeners
-songButton.addEventListener("click", lyricsAPI);
+playButton.addEventListener("click", lyricsAPI);
 genreEl.addEventListener("click", storeGenre);
