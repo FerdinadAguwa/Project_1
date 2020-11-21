@@ -4,9 +4,6 @@ ON the response each songs' following info and stick it into an array:
 1. Artist: response.tracks.track[].artist.name
 2. SongTitle: response.tracks.track[].name
 
-
-
-
 iterrate the array into the list where it shows up as Artits - Song Name
 
 On clicking one of the songs in the list, on the right side the Lyrics (https://api.lyrics.ovh/v1/Coldplay/Adventure of a Lifetime)
@@ -35,8 +32,10 @@ Blues
 var artistName = "";
 var songName = "";
 var genre ="";
-var songButton = $("button.songs")
-var apiKey = "6f9af90b658b61feec3b4d25a8309963"
+var genreEl = $(".card-title");
+var songButton = $(".collection-item avatar");
+var playButton = $(".material-icons circle red");
+var apiKey = "6f9af90b658b61feec3b4d25a8309963";
 var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
 var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
 
@@ -49,38 +48,63 @@ function clearGenre() {
 function getSongs(response) {
     for (var i = 0; i < 10; i++){
         //Variable to grab the dom element where we are displaying the list
-        var songsListDiv = $(/*"div class="songListDiv"*/);
+        var songsListDiv = $(".collection");
+
+        // Setting the List item up
+        var songListEL = $("<li>").setAttribute("class", "collection-item avatar");
         //This portion goes through the track array and pulls out the info we need.
         artistName = response.tracks.track[i].artist.name;
         songName = response.tracks.track[i].name;
         
-        //Setting the Artist and Song name in a list
-        var songButton = $("<button>").text(artistName + " -- " + songName);
-        songButton.setAttribute("class", "songs");
+        //Settings the spans
+        var artistSpanEl = $("<span>").setAttribute("class", "artist-name").text(artistName);
+        var songSpanEL = $("<span>").setAttribute("class", "song-name").text(songName);
+        artistSpanEl.append("<br>");
+        var playButton = $("<i>").setAttribute("class", "material-icons circle red").text("play_arrow");
 
         //This section posts the items in an unordered list
-        songsListDiv.append(songButton);
+        songListEL.append(playButton, artistSpanEl, songSpanEL);
+        songsListDiv.append(songListEL);
 
-    }
+    };
 };
 
-function getLyrics() {
+function getLyrics(response) {
     // Variables
     var lyrics = response.lyrics;
-    var lyricsDiv = $(/*"div class=lyricsDiv*/);
+    var lyricsDiv = $(".col s7");
     // May as well post those lyrics since we got em!
     lyricsDiv.append("<p>").text(lyrics);
 };
 
+function lyricsAPI() {
+    // getting the artistName and songName assigned for the call
+    artistName = $(".artist-name").text();
+    songName = $(".song-name").text();
 
+    //Setting the Song title in the Lyrics area
+    var lyricsDiv = $(".col s7");
+    var songTitle = $("<h3>").text(songName);
+    lyricsDiv.append(songTitle);
+
+    //The API call to get the lyrics for the song based upon the Span Clicked
+    $.ajax({
+        url: lyricsApiCall,
+        method: "GET"
+    }).then(getLyrics);
+};
+
+// this function stores the genre from the card clicked on to be used on the following page
 function storeGenre() {
+    genre = genreEl.attr("id");
     localStorage.setItem("genre-selection", JSON.stringify(genre));
+    console.log(genre);
 };
 
 
 
 if (localStorage.getItem("genre-selection")){
-    //Settings the genre variable based on the selection made
+    //Setting the genre variable based on the selection made
     genre = JSON.parse(localStorage.getItem("genre-selection"));
     
     //Make the call to get and post the songs
@@ -88,7 +112,8 @@ if (localStorage.getItem("genre-selection")){
         url: lastFmApiCall,
         method: "GET"
     }).then(getSongs);
-}
+};
 
-// event listener to trigger the lyrics posting
-songButton.addEventListener("click", getSongs);
+// event listeners
+playButton.addEventListener("click", lyricsAPI);
+genreEl.addEventListener("click", storeGenre);
