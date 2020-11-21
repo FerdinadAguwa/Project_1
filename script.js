@@ -58,9 +58,9 @@ function getSongs(response) {
         artistName = response.tracks.track[i].artist.name;
         songName = response.tracks.track[i].name;
         
-        //Setting the Artist and Song name in a list
-        var artistSpanEl = $("<span>").setAttribute("class", "artist-name").text("Artist Name : " + artistName);
-        var songSpanEL = $("<span>").setAttribute("class", "song-name").text("Song Title : " + songName);
+        //Settings the spans
+        var artistSpanEl = $("<span>").setAttribute("class", "artist-name").text(artistName);
+        var songSpanEL = $("<span>").setAttribute("class", "song-name").text(songName);
         artistSpanEl.append("<br>");
         var playButton = $("<i>").setAttribute("class", "material-icons circle red").text("play_arrow");
 
@@ -71,16 +71,6 @@ function getSongs(response) {
     };
 };
 
-
-function lyricsAPI() {
-    // getting the artistName and songName assigned for the call
-    artistName = $("")
-
-    $.ajax({
-        url: lyricsApiCall
-    })
-}
-
 function getLyrics(response) {
     // Variables
     var lyrics = response.lyrics;
@@ -89,10 +79,28 @@ function getLyrics(response) {
     lyricsDiv.append("<p>").text(lyrics);
 };
 
+function lyricsAPI() {
+    // getting the artistName and songName assigned for the call
+    artistName = $(".artist-name").text();
+    songName = $("song-name").text();
 
+    //Setting the Song title in the Lyrics area
+    var lyricsDiv = $(".col s7");
+    var songTitle = $("<h3>").text(songName);
+    lyricsDiv.append(songTitle);
+
+    //The API call to get the lyrics for the song based upon the Span Clicked
+    $.ajax({
+        url: lyricsApiCall,
+        method: "GET"
+    }).then(getLyrics);
+};
+
+// this function stores the genre from the card clicked on to be used on the following page
 function storeGenre() {
     genre = genreEl.attr("id");
     localStorage.setItem("genre-selection", JSON.stringify(genre));
+    console.log(genre);
 };
 
 
@@ -106,8 +114,8 @@ if (localStorage.getItem("genre-selection")){
         url: lastFmApiCall,
         method: "GET"
     }).then(getSongs);
-}
+};
 
-// event listener to trigger the lyrics posting
+// event listeners
 songButton.addEventListener("click", lyricsAPI);
 genreEl.addEventListener("click", storeGenre);
