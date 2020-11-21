@@ -4,9 +4,6 @@ ON the response each songs' following info and stick it into an array:
 1. Artist: response.tracks.track[].artist.name
 2. SongTitle: response.tracks.track[].name
 
-
-
-
 iterrate the array into the list where it shows up as Artits - Song Name
 
 On clicking one of the songs in the list, on the right side the Lyrics (https://api.lyrics.ovh/v1/Coldplay/Adventure of a Lifetime)
