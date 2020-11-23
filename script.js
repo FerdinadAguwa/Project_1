@@ -12,7 +12,10 @@ will appear along with the Album cover (last.fm API/ response.results.songs.data
 */
 // This is the new Nav bar and its mobile responsive
 $(document).ready(function () {
+  // this code initializes the side bar
 $('.sidenav').sidenav();
+$(".dropdown-trigger").dropdown();
+
   // Variables
   var artistName = "";
   var songName = "";
