@@ -14,20 +14,22 @@ will appear along with the Album cover (last.fm API/ response.results.songs.data
 // Variables
 var artistName = "";
 var songName = "";
-var genre ="";
-var genreEl = $(".card-img");
-var songButton = $(".collection-item avatar");
-var playButton = $(".material-icons circle red");
+//var genre ="";
+var genreTitle = $("a.card-title");
+var songButton = $("li.collection-item.avatar");
+var playButton = $("i.material-icons circle red");
 var apiKey = "6f9af90b658b61feec3b4d25a8309963";
-var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
-var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
+//var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
+//var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
 
 // FUNctions! SO MUCH FUN!!!!
 
 if (localStorage.getItem("genre-selection")){
-    //Setting the genre variable based on the selection made
-    genre = localStorage.getItem("genre-selection").trim();
-    
+    //Setting the genre variable based on the selection made, moved the API combiner inside the if statement as it doesn't seem to pick up the genre variable otherwise
+    var genre = localStorage.getItem("genre-selection").trim();
+    var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
+    console.log(genre);
+    console.log(lastFmApiCall);
     //Make the call to get and post the songs
     $.ajax({
         url: lastFmApiCall,
@@ -60,28 +62,32 @@ function getSongs(response) {
         //This section posts the items in an unordered list
         songListEL.append(playButton, artistSpanEl, songSpanEL);
         songsListDiv.append(songListEL);
+        songListEL.bind("click", lyricsAPI);
 
     };
 };
 
 function getLyrics(response) {
     // Variables
-    var lyrics = response.lyrics;
-    var lyricsDiv = $(".col s7");
-    // May as well post those lyrics since we got em!
-    lyricsDiv.append("<p>").text(lyrics);
+    var songLyrics = "";
+    songLyrics = response.lyrics;
+    var lyricsDiv = $("div.col.s7");
+    var song = localStorage.getItem("songName").trim();
+    console.log(songLyrics);
+    // Updating the DOM!
+    lyricsDiv.children("h3").replaceWith("<h3>" + song + "</h3>");
+    lyricsDiv.children("p").replaceWith("<p>" + songLyrics);
 };
 
 function lyricsAPI() {
     // getting the artistName and songName assigned for the call
-    artistName = $(".artist-name").text();
-    songName = $(".song-name").text();
-    console.log(songName, artistName);
-    //Setting the Song title in the Lyrics area
-    var lyricsDiv = $(".col s7");
-    var songTitle = $("<h3>").text(songName);
-    lyricsDiv.append(songTitle);
-
+    artistName = $(this).children(".artist-name").text();
+    songName = $(this).children(".song-name").text();
+    // console.log(songName, artistName);
+    //Storing the songName to be called in the child function
+    localStorage.setItem("songName", songName);
+    var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
+    console.log(lyricsApiCall);
     //The API call to get the lyrics for the song based upon the Span Clicked
     $.ajax({
         url: lyricsApiCall,
@@ -91,14 +97,12 @@ function lyricsAPI() {
 
 // this function stores the genre from the card clicked on to be used on the following page
 function storeGenre() {
-    genre = $(".card-title").attr("id");
+    genre = this.id;
     localStorage.setItem("genre-selection", genre);
-    console.log(genre);
+    //console.log(genre);
 };
 
 // event listeners
 //playButton.addEventListener("click", lyricsAPI);
 //genreEl.addEventListener("click", storeGenre);
-
-$(".collection-item avatar").click(lyricsAPI());
-genreEl.click(storeGenre);
+genreTitle.click(storeGenre);
