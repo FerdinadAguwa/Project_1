@@ -14,20 +14,15 @@ will appear along with the Album cover (last.fm API/ response.results.songs.data
 // Variables
 var artistName = "";
 var songName = "";
-//var genre ="";
 var genreTitle = $("a.card-title");
-var songButton = $("li.collection-item.avatar");
-var playButton = $("i.material-icons circle red");
 var apiKey = "6f9af90b658b61feec3b4d25a8309963";
-//var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
-//var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
+var genre = localStorage.getItem("genre-selection").trim();
+var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
 
 // FUNctions! SO MUCH FUN!!!!
 
-if (localStorage.getItem("genre-selection")){
-    //Setting the genre variable based on the selection made, moved the API combiner inside the if statement as it doesn't seem to pick up the genre variable otherwise
-    var genre = localStorage.getItem("genre-selection").trim();
-    var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
+if (genre){
+    //Setting the genre variable based on the selection made
     console.log(genre);
     console.log(lastFmApiCall);
     //Make the call to get and post the songs
@@ -38,9 +33,9 @@ if (localStorage.getItem("genre-selection")){
 };
 
 
-function clearGenre() {
-    localStorage.setItem("genre-selection", "");
-}
+// function clearGenre() {
+//     localStorage.setItem("genre-selection", "");
+// };
 
 function getSongs(response) {
     for (var i = 0; i < 10; i++){
@@ -62,6 +57,7 @@ function getSongs(response) {
         //This section posts the items in an unordered list
         songListEL.append(playButton, artistSpanEl, songSpanEL);
         songsListDiv.append(songListEL);
+        //this element binds the "onclick event" so that way the lyrics click will come up
         songListEL.bind("click", lyricsAPI);
 
     };
@@ -80,12 +76,13 @@ function getLyrics(response) {
 };
 
 function lyricsAPI() {
-    // getting the artistName and songName assigned for the call
-    artistName = $(this).children(".artist-name").text();
-    songName = $(this).children(".song-name").text();
-    // console.log(songName, artistName);
+    // getting the artistName and songName assigned for the call, also running a check to ensure that we can pass information correctly to the API
+    artistName = $(this).children(".artist-name").text().replace("&", "and");
+    songName = $(this).children(".song-name").text().replace("&", "and");
+    console.log(songName, artistName);
     //Storing the songName to be called in the child function
     localStorage.setItem("songName", songName);
+    //setting the API string here based upon which items are clicked.
     var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
     console.log(lyricsApiCall);
     //The API call to get the lyrics for the song based upon the Span Clicked
@@ -103,6 +100,4 @@ function storeGenre() {
 };
 
 // event listeners
-//playButton.addEventListener("click", lyricsAPI);
-//genreEl.addEventListener("click", storeGenre);
 genreTitle.click(storeGenre);
