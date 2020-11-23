@@ -14,16 +14,18 @@ will appear along with the Album cover (last.fm API/ response.results.songs.data
 // Variables
 var artistName = "";
 var songName = "";
-var genreTitle = $("a.card-title");
+var genreTitle = $(".card-title");
 var apiKey = "6f9af90b658b61feec3b4d25a8309963";
-var genre = localStorage.getItem("genre-selection").trim();
-var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
+var genre = "";
+
 
 // FUNctions! SO MUCH FUN!!!!
 
-if (genre){
+if (localStorage.getItem("genre-selection")){
     //Setting the genre variable based on the selection made
+    genre = localStorage.getItem("genre-selection").trim();
     console.log(genre);
+    var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre +"&api_key="+apiKey+"&format=json&limit=10";
     console.log(lastFmApiCall);
     //Make the call to get and post the songs
     $.ajax({
@@ -69,9 +71,11 @@ function getLyrics(response) {
     songLyrics = response.lyrics;
     var lyricsDiv = $("div.col.s7");
     var song = localStorage.getItem("songName").trim();
+    var artist = localStorage.getItem("artistName").trim();
     console.log(songLyrics);
     // Updating the DOM!
     lyricsDiv.children("h3").replaceWith("<h3>" + song + "</h3>");
+    lyricsDiv.children("h5").replaceWith("<h5>" + artist + "</h5>");
     lyricsDiv.children("p").replaceWith("<p>" + songLyrics);
 };
 
@@ -82,6 +86,7 @@ function lyricsAPI() {
     console.log(songName, artistName);
     //Storing the songName to be called in the child function
     localStorage.setItem("songName", songName);
+    localStorage.setItem("artistName", artistName);
     //setting the API string here based upon which items are clicked.
     var lyricsApiCall = "https://api.lyrics.ovh/v1/" + artistName +"/" + songName;
     console.log(lyricsApiCall);
