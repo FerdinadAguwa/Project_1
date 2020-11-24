@@ -10,11 +10,13 @@ On clicking one of the songs in the list, on the right side the Lyrics (https://
 will appear along with the Album cover (last.fm API/ response.results.songs.data.attributes.artwork.url
 
 */
+
+// grabs the paragraph with lyrics to style
+// $(document)[0].children[0].children[1].children[2].children[1].children[3].style.
+
 // This is the new Nav bar and its mobile responsive
 $(document).ready(function () {
   // this code initializes the side bar
-
-
 
   // Variables
   var artistName = "";
@@ -35,6 +37,9 @@ $(document).ready(function () {
       "&api_key=" +
       apiKey +
       "&format=json&limit=10";
+    $('#current-genre').on("click", function() {
+      
+    })
     console.log(lastFmApiCall);
     //Make the call to get and post the songs
     $.ajax({
@@ -117,6 +122,7 @@ $(document).ready(function () {
   }
 
   // event listeners
+  $('.dropdown-trigger').dropdown();
   $('.sidenav').sidenav();
   genreTitle.click(storeGenre);
 });
