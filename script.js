@@ -79,11 +79,11 @@ $(document).ready(function () {
   function getLyrics(response) {
     // Variables
     var songLyrics = "";
-    songLyrics = response.lyrics;
+    songLyrics = response.lyrics.split("\n").join("<br />");
     var lyricsDiv = $("div.col.s7");
     var song = localStorage.getItem("songName").trim();
     var artist = localStorage.getItem("artistName").trim();
-    console.log(songLyrics);
+   
     // Updating the DOM!
     lyricsDiv.children("h3").replaceWith("<h3>" + song + "</h3>");
     lyricsDiv.children("h5").replaceWith("<h5>" + artist + "</h5>");
