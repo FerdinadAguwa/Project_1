@@ -24,13 +24,20 @@ $(document).ready(function () {
   var genreTitle = $(".card-title");
   var apiKey = "6f9af90b658b61feec3b4d25a8309963";
   var genre = "";
-
+  var songList = [];
+  var href = document.location.href;
+  var lastPathSegment = href.substr(href.lastIndexOf('/') + 1);
+  if (JSON.parse(localStorage.getItem("Song-list"))){
+    songList = JSON.parse(localStorage.getItem("Song-list"));
+  };
   // FUNctions! SO MUCH FUN!!!!
-
-  if (localStorage.getItem("genre-selection")) {
+  // console.log(lastPathSegment);
+  // setting the page upon load to grab the genre info and make the first API call.
+  if (lastPathSegment === "song-list.html") {
     //Setting the genre variable based on the selection made
     genre = localStorage.getItem("genre-selection").trim();
     console.log(genre);
+    
     var lastFmApiCall =
       "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" +
       genre +
@@ -47,6 +54,30 @@ $(document).ready(function () {
       method: "GET",
     }).then(getSongs);
   }
+  else if (lastPathSegment === "personal-list.html") {
+    songList = JSON.parse(localStorage.getItem("Song-List"));
+    console.log(songList);
+    for (var i = 0; i < songList.length; i++) {
+      var songsListDiv = $(".collection");
+
+      // Setting the List item up
+      var songListEL = $("<li>").attr("class", "collection-item avatar");
+      //This portion goes through the track array and pulls out the info we need.
+      artistName = songList[i].artistName;
+      songName = songList[i].songName;
+      //Settings the spans
+      var artistSpanEl = $("<span>").attr("class", "artist-name").text(artistName);
+      var songSpanEL = $("<span>").attr("class", "song-name").text(songName);
+      artistSpanEl.append("<br>");
+      var playButton = $("<i>").attr("class", "material-icons circle red").text("play_arrow");
+
+      //This section posts the items in an unordered list
+      songListEL.append(playButton, artistSpanEl, songSpanEL);
+      songsListDiv.append(songListEL);
+      //this element binds the "onclick event" so that way the lyrics click will come up
+      songListEL.bind("click", lyricsAPI);
+    };
+  };
 
   // function clearGenre() {
   //     localStorage.setItem("genre-selection", "");
@@ -64,14 +95,10 @@ $(document).ready(function () {
       songName = response.tracks.track[i].name;
 
       //Settings the spans
-      var artistSpanEl = $("<span>")
-        .attr("class", "artist-name")
-        .text(artistName);
+      var artistSpanEl = $("<span>").attr("class", "artist-name").text(artistName);
       var songSpanEL = $("<span>").attr("class", "song-name").text(songName);
       artistSpanEl.append("<br>");
-      var playButton = $("<i>")
-        .attr("class", "material-icons circle red")
-        .text("play_arrow");
+      var playButton = $("<i>").attr("class", "material-icons circle red").text("play_arrow");
 
       //This section posts the items in an unordered list
       songListEL.append(playButton, artistSpanEl, songSpanEL);
@@ -112,17 +139,25 @@ $(document).ready(function () {
       url: lyricsApiCall,
       method: "GET",
     }).then(getLyrics);
-  }
+  };
+  //this function is to store the song into the songList aray as an object
+  function storeSong() {
+    artistName = $(this).siblings("h5").text().replace("&", "and");
+    songName = $(this).siblings("h3").text().replace("&", "and");
+    songList.push({"artistName": artistName, "songName": songName});
+    //console.log(songList);
+    localStorage.setItem("Song-List", JSON.stringify(songList));
+  };
 
   // this function stores the genre from the card clicked on to be used on the following page
   function storeGenre() {
     genre = this.id;
     localStorage.setItem("genre-selection", genre);
     //console.log(genre);
-  }
+  };
 
   // event listeners
-  $('.dropdown-trigger').dropdown();
+  $(".btn-floating.btn-small.waves-effect.waves-light.red").click(storeSong);
   $('.sidenav').sidenav();
   genreTitle.click(storeGenre);
 });
