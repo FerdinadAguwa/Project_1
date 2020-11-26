@@ -18,3 +18,7 @@ body {
 .row .col .card:hover {
     background: white
 }
+
+#personal-play-footer {
+    margin-top: 500px !important;
+}
