@@ -44,9 +44,11 @@ $(document).ready(function () {
     }).then(getSongs);
   }
   else if (lastPathSegment === "personal-list.html") {
-    songList = JSON.parse(localStorage.getItem("Song-List"));
-    //console.log(songList);
-    listPersonalSongs();
+    if (localStorage.getItem("Song-List")){
+      songList = JSON.parse(localStorage.getItem("Song-List"));
+      //console.log(songList);
+      listPersonalSongs();
+    };
   };
 
   // function clearGenre() {
@@ -137,7 +139,9 @@ $(document).ready(function () {
   };
   //this function is to store the song into the songList aray as an object
   function storeSong() {
-    songList = JSON.parse(localStorage.getItem("Song-List"));
+    if (localStorage.getItem("Song-List")){
+      songList = JSON.parse(localStorage.getItem("Song-List"));
+    };
     if (lastPathSegment == "song-list.html"){
       artistName = $(this).siblings("h5").text().replace("&", "and");
       songName = $(this).siblings("h3").text().replace("&", "and");
