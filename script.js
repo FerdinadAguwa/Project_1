@@ -27,9 +27,7 @@ $(document).ready(function () {
   var songList = [];
   var href = document.location.href;
   var lastPathSegment = href.substr(href.lastIndexOf('/') + 1);
-  if (JSON.parse(localStorage.getItem("Song-list"))){
-    songList = JSON.parse(localStorage.getItem("Song-list"));
-  };
+  
   // FUNctions! SO MUCH FUN!!!!
   // console.log(lastPathSegment);
   // setting the page upon load to grab the genre info and make the first API call.
@@ -142,10 +140,13 @@ $(document).ready(function () {
   };
   //this function is to store the song into the songList aray as an object
   function storeSong() {
+    if (localStorage.getItem("Song-list")){
+      songList = JSON.parse(localStorage.getItem("Song-list"));
+    };
     artistName = $(this).siblings("h5").text().replace("&", "and");
     songName = $(this).siblings("h3").text().replace("&", "and");
     songList.push({"artistName": artistName, "songName": songName});
-    //console.log(songList);
+    console.log(songList);
     localStorage.setItem("Song-List", JSON.stringify(songList));
   };
 
