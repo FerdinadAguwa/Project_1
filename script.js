@@ -34,18 +34,9 @@ $(document).ready(function () {
   if (lastPathSegment === "song-list.html") {
     //Setting the genre variable based on the selection made
     genre = localStorage.getItem("genre-selection").trim();
-    console.log(genre);
-    
-    var lastFmApiCall =
-      "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" +
-      genre +
-      "&api_key=" +
-      apiKey +
-      "&format=json&limit=10";
-    $('#current-genre').on("click", function() {
-      
-    })
-    console.log(lastFmApiCall);
+    //console.log(genre);
+    var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre + "&api_key=" + apiKey + "&format=json&limit=10";
+    //console.log(lastFmApiCall);
     //Make the call to get and post the songs
     $.ajax({
       url: lastFmApiCall,
@@ -54,11 +45,20 @@ $(document).ready(function () {
   }
   else if (lastPathSegment === "personal-list.html") {
     songList = JSON.parse(localStorage.getItem("Song-List"));
-    console.log(songList);
-    for (var i = 0; i < songList.length; i++) {
-      var songsListDiv = $(".collection");
+    //console.log(songList);
+    listPersonalSongs();
+  };
 
+  // function clearGenre() {
+  //     localStorage.setItem("genre-selection", "");
+  // };
+
+  function listPersonalSongs() {
+    var songsListDiv = $(".collection");
+    songsListDiv.empty();
+    for (var i = 0; i < songList.length; i++) {
       // Setting the List item up
+      //console.log(songsListDiv)
       var songListEL = $("<li>").attr("class", "collection-item avatar");
       //This portion goes through the track array and pulls out the info we need.
       artistName = songList[i].artistName;
@@ -75,17 +75,14 @@ $(document).ready(function () {
       //this element binds the "onclick event" so that way the lyrics click will come up
       songListEL.bind("click", lyricsAPI);
     };
-  };
-
-  // function clearGenre() {
-  //     localStorage.setItem("genre-selection", "");
-  // };
+  }
 
   function getSongs(response) {
+    var songsListDiv = $(".collection");
+    songsListDiv.empty();
     for (var i = 0; i < 10; i++) {
       //Variable to grab the dom element where we are displaying the list
-      var songsListDiv = $(".collection");
-
+      
       // Setting the List item up
       var songListEL = $("<li>").attr("class", "collection-item avatar");
       //This portion goes through the track array and pulls out the info we need.
@@ -96,7 +93,7 @@ $(document).ready(function () {
       var artistSpanEl = $("<span>").attr("class", "artist-name").text(artistName);
       var songSpanEL = $("<span>").attr("class", "song-name").text(songName);
       artistSpanEl.append("<br>");
-      var playButton = $("<i>").attr("class", "material-icons circle red").text("remove");
+      var playButton = $("<i>").attr("class", "material-icons circle red").text("play_arrow");
 
       //This section posts the items in an unordered list
       songListEL.append(playButton, artistSpanEl, songSpanEL);
@@ -124,14 +121,14 @@ $(document).ready(function () {
     // getting the artistName and songName assigned for the call, also running a check to ensure that we can pass information correctly to the API
     artistName = $(this).children(".artist-name").text().replace("&", "and");
     songName = $(this).children(".song-name").text().replace("&", "and");
-    console.log(songName, artistName);
+    //console.log(songName, artistName);
     //Storing the songName to be called in the child function
     localStorage.setItem("songName", songName);
     localStorage.setItem("artistName", artistName);
     //setting the API string here based upon which items are clicked.
     var lyricsApiCall =
       "https://api.lyrics.ovh/v1/" + artistName + "/" + songName;
-    console.log(lyricsApiCall);
+    //console.log(lyricsApiCall);
     //The API call to get the lyrics for the song based upon the Span Clicked
     $.ajax({
       url: lyricsApiCall,
@@ -155,6 +152,7 @@ $(document).ready(function () {
           localStorage.setItem("Song-List", JSON.stringify(songList));
         };
       };
+      listPersonalSongs();
     };
   };
 
