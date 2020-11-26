@@ -35,7 +35,7 @@ $(document).ready(function () {
     //Setting the genre variable based on the selection made
     genre = localStorage.getItem("genre-selection").trim();
     //console.log(genre);
-    var lastFmApiCall = "http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre + "&api_key=" + apiKey + "&format=json&limit=10";
+    var lastFmApiCall = "https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre + "&api_key=" + apiKey + "&format=json&limit=10";
     //console.log(lastFmApiCall);
     //Make the call to get and post the songs
     $.ajax({
