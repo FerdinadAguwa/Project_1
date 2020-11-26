@@ -64,9 +64,9 @@ width= 500px
 
 
 ### Nathaniel Scott 
-<img src= "#"
+<img src= "assets/MVIMG_20200123_160450.jpg"
      alt="Contributer Photo"
-     width=70px />
+     width=270px />
 
 * Github username: nwscott81
 * Email: nwscott81@gmail.com
