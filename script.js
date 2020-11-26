@@ -96,7 +96,7 @@ $(document).ready(function () {
       var artistSpanEl = $("<span>").attr("class", "artist-name").text(artistName);
       var songSpanEL = $("<span>").attr("class", "song-name").text(songName);
       artistSpanEl.append("<br>");
-      var playButton = $("<i>").attr("class", "material-icons circle red").text("play_arrow");
+      var playButton = $("<i>").attr("class", "material-icons circle red").text("remove");
 
       //This section posts the items in an unordered list
       songListEL.append(playButton, artistSpanEl, songSpanEL);
@@ -140,14 +140,22 @@ $(document).ready(function () {
   };
   //this function is to store the song into the songList aray as an object
   function storeSong() {
-    if (localStorage.getItem("Song-list")){
-      songList = JSON.parse(localStorage.getItem("Song-list"));
+    songList = JSON.parse(localStorage.getItem("Song-List"));
+    if (lastPathSegment == "song-list.html"){
+      artistName = $(this).siblings("h5").text().replace("&", "and");
+      songName = $(this).siblings("h3").text().replace("&", "and");
+      songList.push({"artistName": artistName, "songName": songName});
+      localStorage.setItem("Song-List", JSON.stringify(songList));
+    }
+    else {
+      songName = $(this).siblings("h3").text().replace("&", "and");
+      for (var i = 0; i < songList.length; i++){
+        if (songName == songList[i].songName){
+          songList.splice(i, 1);
+          localStorage.setItem("Song-List", JSON.stringify(songList));
+        };
+      };
     };
-    artistName = $(this).siblings("h5").text().replace("&", "and");
-    songName = $(this).siblings("h3").text().replace("&", "and");
-    songList.push({"artistName": artistName, "songName": songName});
-    console.log(songList);
-    localStorage.setItem("Song-List", JSON.stringify(songList));
   };
 
   // this function stores the genre from the card clicked on to be used on the following page
