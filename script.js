@@ -35,7 +35,7 @@ $(document).ready(function () {
     //Setting the genre variable based on the selection made
     genre = localStorage.getItem("genre-selection").trim();
     //console.log(genre);
-    var lastFmApiCall = "https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=" + genre + "&api_key=" + apiKey + "&format=json&limit=10";
+    var lastFmApiCall = `https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=${genre}&api_key=${apiKey}&format=json&limit=10`;
     //console.log(lastFmApiCall);
     //Make the call to get and post the songs
     $.ajax({
@@ -107,6 +107,7 @@ $(document).ready(function () {
 
   function getLyrics(response) {
     // Variables
+    $("div.col.s7.hide").attr("class", "col s7");
     var songLyrics = "";
     songLyrics = response.lyrics.split("\n").join("<br />");
     var lyricsDiv = $("div.col.s7");
@@ -128,8 +129,7 @@ $(document).ready(function () {
     localStorage.setItem("songName", songName);
     localStorage.setItem("artistName", artistName);
     //setting the API string here based upon which items are clicked.
-    var lyricsApiCall =
-      "https://api.lyrics.ovh/v1/" + artistName + "/" + songName;
+    var lyricsApiCall = `https://api.lyrics.ovh/v1/${artistName}/${songName}`;
     //console.log(lyricsApiCall);
     //The API call to get the lyrics for the song based upon the Span Clicked
     $.ajax({
